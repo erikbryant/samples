@@ -10,19 +10,22 @@
 #include <queue>
 #include <random>
 
+using namespace std;
+
 std::mutex g_lockprint;
 std::mutex g_lockqueue;
 std::condition_variable g_queuecheck;
 std::queue<int> g_codes;
 bool g_done;
 bool g_notified;
+bool g_loggerReady;
 
 void workerfunc(int id, std::mt19937& generator)
 {
   // print a starting message
   {
     std::unique_lock<std::mutex> locker(g_lockprint);
-    std::cout << "[worker " << id << "]\trunning..." << std::endl;
+    cout << "[worker " << id << "]\trunning..." << endl;
   }
 
   // simulate work
@@ -32,7 +35,7 @@ void workerfunc(int id, std::mt19937& generator)
   int errorcode = id*100+1;
   {
     std::unique_lock<std::mutex> locker(g_lockprint);
-    std::cout << "[worker " << id << "]\tan error occurred: " << errorcode << std::endl;
+    cout << "[worker " << id << "]\tan error occurred: " << errorcode << endl;
   }
 
   // notify error to be logged
@@ -46,11 +49,15 @@ void workerfunc(int id, std::mt19937& generator)
 
 void loggerfunc()
 {
+  std::this_thread::sleep_for(std::chrono::seconds(5));
+
   // print a starting message
   {
     std::unique_lock<std::mutex> locker(g_lockprint);
-    std::cout << "[logger]\trunning..." << std::endl;
+    cout << "[logger]\trunning..." << endl;
   }
+
+  g_loggerReady = true;
 
   // loop until end is signaled
   while(!g_done)
@@ -66,7 +73,7 @@ void loggerfunc()
       while(!g_codes.empty())
 	{
 	  std::unique_lock<std::mutex> locker(g_lockprint);
-	  std::cout << "[logger]\tprocessing error: " << g_codes.front() << std::endl;
+	  cout << "[logger]\tprocessing error: " << g_codes.front() << endl;
 	  g_codes.pop();
 	}
 
@@ -80,23 +87,32 @@ int main()
   std::mt19937 generator((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
 
   // start the logger
+  g_loggerReady = false;
   std::thread loggerthread(loggerfunc);
+  while ( !g_loggerReady )
+    {
+      cout << "Sleeping to wait for logger..." << endl;
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      cout << "...done sleeping" << endl;
+    }
 
-  // start the working threads
+  // start the worker threads
   std::vector<std::thread> threads;
   for(int i = 0; i < 5; ++i)
     {
       threads.push_back(std::thread(workerfunc, i+1, std::ref(generator)));
     }
 
-  // work for the workers to finish
+  // wait for the workers to finish
   for(auto& t : threads)
-    t.join();
+    {
+      t.join();
+    }
 
   // notify the logger to finish and wait for it
   g_done = true;
   loggerthread.join();
 
-return 0;
+  return 0;
 }
 
