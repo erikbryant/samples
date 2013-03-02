@@ -3,13 +3,16 @@ CC_DEBUG = g++ $(C11) -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs 
 C11      = -std=c++11
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
+EXECUTABLES = concurrency
+
 .PHONY: all
-all: concurrency
+all: $(EXECUTABLES)
 
 .PHONY: clean
 clean:
 	rm -f perf.data perf.data.old
 	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
+	rm -f a.out $(EXECUTABLES)
 
 concurrency: concurrency.c++
 	$(CPPCHECK) $^
