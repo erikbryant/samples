@@ -4,7 +4,7 @@ C11      = -std=c++11
 THREADS  = -pthread
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-EXECUTABLES = concurrency staticConstructor
+EXECUTABLES = args concurrency prime sieve staticConstructor
 
 .PHONY: all
 all: $(EXECUTABLES)
@@ -15,9 +15,30 @@ clean:
 	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
 	rm -f a.out $(EXECUTABLES)
 
+args: args.c++
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $@.c++ -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
+
 concurrency: concurrency.c++
 	$(CPPCHECK) $^
 	$(CC_DEBUG) -D_GLIBCXX_USE_NANOSLEEP $(THREADS) $@.c++ -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
+
+prime: prime.c++
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $@.c++ -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
+
+sieve: sieve.c++
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $@.c++ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
