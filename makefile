@@ -1,10 +1,10 @@
-CC       = g++ $(C11) -Wall -Werror -Weffc++ -O3 -D_GLIBCXX_USE_NANOSLEEP
-CC_DEBUG = g++ $(C11) -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
+CC       = g++ -Wall -Werror -Weffc++ -O3 -D_GLIBCXX_USE_NANOSLEEP
+CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
 C11      = -std=c++11
 THREADS  = -pthread
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-EXECUTABLES = args concurrency prime sieve staticConstructor
+EXECUTABLES = args concurrency prime sieve staticConstructor function
 
 .PHONY: all
 all: $(EXECUTABLES)
@@ -24,7 +24,14 @@ args: args.c++
 
 concurrency: concurrency.c++
 	$(CPPCHECK) $^
-	$(CC_DEBUG) -D_GLIBCXX_USE_NANOSLEEP $(THREADS) $@.c++ -o $@
+	$(CC_DEBUG) $(C11) -D_GLIBCXX_USE_NANOSLEEP $(THREADS) $@.c++ -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
+
+function: function.c++
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $(C11) $@.c++ -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
