@@ -68,3 +68,10 @@ tictactoe: tictactoe.c++
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
+
+boygirl: boygirl.c++
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $@.c++ -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
