@@ -9,7 +9,7 @@ C11      = -std=c++11
 THREADS  = -pthread
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl
+EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl hash
 
 .PHONY: all
 all: $(EXECUTABLES)
@@ -70,6 +70,13 @@ tictactoe: tictactoe.cc
 	gcov $@ > /dev/null
 
 boygirl: boygirl.cc
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $@.cc -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
+
+hash: hash.cc
 	$(CPPCHECK) $^
 	$(CC_DEBUG) $@.cc -o $@
 	./$@
