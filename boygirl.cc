@@ -1,8 +1,14 @@
 //
-// Sample interview question taken from somewhere, but I've forgotten the URL.
-// Essentially...
+// Copyright Erik Bryant (erikbryantology@gmail.com)
+// GPLv2 http://www.gnu.org/licenses/gpl-2.0.html
+//
+// Implementation of a sample interview question taken from somewhere,
+// but I've forgotten the URL. Essentially...
 // Every family had a child until that child is a boy. Then they stop.
 // What percentage of children are boys?
+//
+// Working this out on paper I got 1/2 boys, 1/2 girls. This Monte
+// Carlo simulation gives that same result!
 //
 
 #include <iostream>

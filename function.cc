@@ -20,7 +20,7 @@ int main( int argc, char *argv[] )
   //
   // http://www.cprogramming.com/c++11/c++11-lambda-closures.html
   //
-  // []	Capture nothing (or, a scorched earth strategy?)
+  // [] 	Capture nothing
   // [&]	Capture any referenced variable by reference
   // [=]	Capture any referenced variable by making a copy
   // [=, &foo]	Capture any referenced variable by making a copy, but capture variable foo by reference
