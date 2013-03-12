@@ -20,58 +20,58 @@ clean:
 	rm -f *.gcov *.gcda *.gcno *.gprof \#*# gmon.out
 	rm -f a.out $(EXECUTABLES)
 
-args: args.c++
+args: args.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $@.c++ -o $@
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-concurrency: concurrency.c++
+concurrency: concurrency.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $(C11) -D_GLIBCXX_USE_NANOSLEEP $(THREADS) $@.c++ -o $@
+	$(CC_DEBUG) $(C11) -D_GLIBCXX_USE_NANOSLEEP $(THREADS) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-function: function.c++
+function: function.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $(C11) $@.c++ -o $@
+	$(CC_DEBUG) $(C11) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-prime: prime.c++
+prime: prime.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $@.c++ -o $@
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-sieve: sieve.c++
+sieve: sieve.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $@.c++ -o $@
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-staticConstructor: staticConstructor.c++
+staticConstructor: staticConstructor.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $@.c++ -o $@
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-tictactoe: tictactoe.c++
+tictactoe: tictactoe.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $@.c++ -o $@
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-boygirl: boygirl.c++
+boygirl: boygirl.cc
 	$(CPPCHECK) $^
-	$(CC_DEBUG) $@.c++ -o $@
+	$(CC_DEBUG) $@.cc -o $@
 	./$@
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null

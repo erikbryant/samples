@@ -14,6 +14,7 @@
 #include <ctime>
 #include <cmath>
 #include <cstring>
+#include <cstdlib>
 
 using namespace std;
 
