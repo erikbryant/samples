@@ -9,7 +9,7 @@ C11      = -std=c++11
 THREADS  = -pthread
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe
+EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl
 
 .PHONY: all
 all: $(EXECUTABLES)
