@@ -6,13 +6,18 @@
 #include <iostream>
 #include <list>
 
-using namespace std;
+using std::ostream;
+using std::cout;
+using std::endl;
+using std::list;
+using std::pair;
+using std::string;
 
 template <typename KEY, typename VALUE>
 class HashTable
 {
 public:
-  HashTable( void );
+  HashTable();
   void add( const KEY &key, const VALUE &value );
   const VALUE *get( const KEY &key ) const;
 
@@ -20,22 +25,22 @@ public:
   {
     unsigned int i = 0;
 
-    for ( i=0; i<map.numBuckets; i++ )
+    for ( i = 0; i < map.numBuckets; ++i )
       {
-	if ( map.buckets[i] == NULL )
-	  {
-	    os << "Bucket[" << i << "] NULL" << endl;
-	  }
-	else
-	  {
-	    os << "Bucket[" << i << "]";
-	    typename list< pair<KEY,VALUE> >::iterator it;
-	    for ( it=map.buckets[i]->begin(); it!=map.buckets[i]->end(); it++ )
-	      {
-		os << " --> Key: " << it->first << " => Value: " << it->second;
-	      }
-	  }
-	cout << endl;
+        if ( map.buckets[i] == NULL )
+          {
+            os << "Bucket[" << i << "] NULL" << endl;
+          }
+        else
+          {
+            os << "Bucket[" << i << "]";
+            typename list< pair<KEY,VALUE> >::iterator it;
+            for ( it = map.buckets[i]->begin(); it != map.buckets[i]->end(); ++it )
+              {
+                os << " --> Key: " << it->first << " => Value: " << it->second;
+              }
+          }
+        cout << endl;
       }
 
     return os;
@@ -52,7 +57,7 @@ template <typename KEY, typename VALUE>
 HashTable<KEY,VALUE>::HashTable( void )
 {
   unsigned int i = 0;
-  for ( i=0; i<numBuckets; i++ )
+  for ( i = 0; i < numBuckets; ++i )
     {
       buckets[i] = NULL;
     }
@@ -71,14 +76,14 @@ void HashTable<KEY,VALUE>::add( const KEY &key, const VALUE &value )
     {
       // Search the list. If this key IS in there, update its value.
       typename list< pair<KEY,VALUE> >::iterator it;
-      for ( it=buckets[i]->begin(); it!=buckets[i]->end(); it++ )
-	{
-	  if ( it->first == key )
-	    {
-	      it->second = value;
-	      return;
-	    }
-	}
+      for ( it = buckets[i]->begin(); it != buckets[i]->end(); ++it )
+        {
+          if ( it->first == key )
+            {
+              it->second = value;
+              return;
+            }
+        }
       // The key was NOT in there. Fall out and add the key/value.
     }
 
@@ -94,13 +99,13 @@ const VALUE *HashTable<KEY,VALUE>::get( const KEY &key ) const
   if ( buckets[i] != NULL )
     {
       typename list< pair<KEY,VALUE> >::iterator it;
-      for ( it=buckets[i]->begin(); it!=buckets[i]->end(); it++ )
-	{
-	  if ( it->first == key )
-	    {
-	      return &( it->second );
-	    }
-	}
+      for ( it = buckets[i]->begin(); it != buckets[i]->end(); ++it )
+        {
+          if ( it->first == key )
+            {
+              return &( it->second );
+            }
+        }
     }
 
   return NULL;
