@@ -19,23 +19,24 @@
 // to try it.
 //
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 class Foo
 {
 public:
-  static Foo *makeFoo( void )
+  static Foo *makeFoo()
   {
     return new Foo;
   }
-  void showValue( void )
+  void showValue()
   {
     cout << "This Foo's value is: " << bar << endl;
   }
 
 private:
   int bar;
-  Foo( void ) :
+  Foo() :
     bar(99)
   {
   }

@@ -5,14 +5,16 @@
 
 #include <iostream>
 
-using namespace std;
+using std::ostream;
+using std::cout;
+using std::endl;
 
 class TicTacToe
 {
 public:
   enum CELLS { BLANK, X, O };
 
-  TicTacToe( void )
+  TicTacToe()
   {
     startNewGame();
   }
@@ -34,12 +36,12 @@ void TicTacToe::startNewGame( void )
   unsigned int row = 0;
   unsigned int col = 0;
 
-  for ( row=0; row<=2; row++ )
+  for ( row = 0; row <= 2; row++ )
     {
-      for ( col=0; col<=2; col++ )
-	{
-	  board[row][col] = BLANK;
-	}
+      for ( col = 0; col <= 2; col++ )
+        {
+          board[row][col] = BLANK;
+        }
     }
 }
 
@@ -49,31 +51,39 @@ bool TicTacToe::hasWon( CELLS player )
   unsigned int col = 0;
 
   // Check rows
-  for ( row=0; row<=2; row++ )
+  for ( row = 0; row <= 2; row++ )
     {
-      if ( board[row][0] == player && board[row][1] == player && board[row][2] == player )
-	{
-	  return true;
-	}
+      if ( board[row][0] == player &&
+           board[row][1] == player &&
+           board[row][2] == player )
+        {
+          return true;
+        }
     }
 
   // Check columns
-  for ( col=0; col<=2; col++ )
+  for ( col = 0; col <= 2; col++ )
     {
-      if ( board[0][col] == player && board[1][col] == player && board[2][col] == player )
-	{
-	  return true;
-	}
+      if ( board[0][col] == player &&
+           board[1][col] == player &&
+           board[2][col] == player )
+        {
+          return true;
+        }
     }
 
   // Check down-and-right diagonal
-  if ( board[0][0] == player && board[1][1] == player && board[2][2] == player )
+  if ( board[0][0] == player &&
+       board[1][1] == player &&
+       board[2][2] == player )
     {
       return true;
     }
 
   // Check up-and-right diagonal
-  if ( board[2][0] == player && board[1][1] == player && board[0][2] == player )
+  if ( board[2][0] == player &&
+       board[1][1] == player &&
+       board[0][2] == player )
     {
       return true;
     }
@@ -86,10 +96,10 @@ bool TicTacToe::move( CELLS player, unsigned int row, unsigned int col )
   if ( player != BLANK && row <= 2 && col <= 2 )
     {
       if ( board[row][col] == BLANK )
-	{
-	  board[row][col] = player;
-	  return true;
-	}
+        {
+          board[row][col] = player;
+          return true;
+        }
     }
 
   return false;
@@ -100,27 +110,27 @@ ostream &operator<<( ostream &os, const TicTacToe &t )
   unsigned int row = 0;
   unsigned int col = 0;
 
-  for ( row=0; row<=2; row++ )
+  for ( row = 0; row <= 2; row++ )
     {
-      for ( col=0; col<=2; col++ )
-	{
-	  if ( t.board[row][col] == TicTacToe::BLANK )
-	    {
-	      os << "-";
-	    }
-	  else if ( t.board[row][col] == TicTacToe::X )
-	    {
-	      os << "X";
-	    }
-	  else if ( t.board[row][col] == TicTacToe::O )
-	    {
-	      os << "O";
-	    }
-	  else
-	    {
-	      os << "#";
-	    }
-	}
+      for ( col = 0; col <= 2; col++ )
+        {
+          if ( t.board[row][col] == TicTacToe::BLANK )
+            {
+              os << "-";
+            }
+          else if ( t.board[row][col] == TicTacToe::X )
+            {
+              os << "X";
+            }
+          else if ( t.board[row][col] == TicTacToe::O )
+            {
+              os << "O";
+            }
+          else
+            {
+              os << "#";
+            }
+        }
       os << endl;
     }
 

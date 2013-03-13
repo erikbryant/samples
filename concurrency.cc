@@ -10,7 +10,8 @@
 #include <queue>
 #include <random>
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 std::mutex g_lockprint;
 std::mutex g_lockqueue;
@@ -64,18 +65,18 @@ void loggerfunc()
     {
       std::unique_lock<std::mutex> locker(g_lockqueue);
 
-      while(!g_notified) // used to avoid spurious wakeups 
-	{
-	  g_queuecheck.wait(locker);
-	}
+      while(!g_notified)   // used to avoid spurious wakeups
+        {
+          g_queuecheck.wait(locker);
+        }
 
       // if there are error codes in the queue process them
       while(!g_codes.empty())
-	{
-	  std::unique_lock<std::mutex> locker(g_lockprint);
-	  cout << "[logger]\tprocessing error: " << g_codes.front() << endl;
-	  g_codes.pop();
-	}
+        {
+          std::unique_lock<std::mutex> locker(g_lockprint);
+          cout << "[logger]\tprocessing error: " << g_codes.front() << endl;
+          g_codes.pop();
+        }
 
       g_notified = false;
     }
@@ -84,7 +85,7 @@ void loggerfunc()
 int main()
 {
   // initialize a random generator
-  std::mt19937 generator((unsigned int)std::chrono::system_clock::now().time_since_epoch().count());
+  std::mt19937 generator(std::chrono::system_clock::now().time_since_epoch().count());
 
   // start the logger
   g_loggerReady = false;
@@ -115,4 +116,3 @@ int main()
 
   return 0;
 }
-

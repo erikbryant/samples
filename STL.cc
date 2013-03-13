@@ -6,13 +6,12 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
+using std::vector;
+using std::cout;
+using std::endl;
 
 int main( int argc, char* argv[] )
 {
-
-  cout << "Hello, world." << endl;
-
   vector<int> v(3);            // Declare a vector of 3 elements.
   v[0] = 7;
   v[1] = v[0] + 3;

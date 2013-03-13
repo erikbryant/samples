@@ -14,7 +14,8 @@
 #include <iostream>
 #include <cstdlib>
 
-using namespace std;
+using std::cout;
+using std::endl;
 
 unsigned int haveChildren( void )
 {
@@ -36,8 +37,8 @@ int main( int argc, char *argv[] )
   unsigned int i = 0;
   unsigned int boys = 0;
   unsigned int girls = 0;
-  
-  for ( i=0; i<10000000; i++ )
+
+  for ( i = 0; i < 10000000; ++i )
     {
       girls += haveChildren();
       boys += 1;
