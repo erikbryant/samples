@@ -9,7 +9,7 @@ C11      = -std=c++11
 THREADS  = -pthread
 CPPCHECK = ../cppcheck-1.58/cppcheck
 
-EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl hash STL asana
+EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl hash STL interview01
 
 .PHONY: all
 all: $(EXECUTABLES)
@@ -90,7 +90,7 @@ STL: STL.cc
 	gprof $@ gmon.out > $@.gprof
 	gcov $@ > /dev/null
 
-asana: asana.cc
+interview01: interview01.cc
 	$(CPPCHECK) $^
 	$(CC_DEBUG) $@.cc -o $@
 	./$@
