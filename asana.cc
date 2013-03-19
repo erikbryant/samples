@@ -3,9 +3,7 @@
 using std::cout;
 using std::endl;
 
-// TODO: Verify that's the right syntax for
-// passing a 2D arry.
-void printMatrixSpiral( int **matrix, unsigned int width, unsigned int height )
+void printMatrixSpiral( int matrix[3][3], unsigned int width, unsigned int height )
 {
   if ( width == 0 || height == 0 )
     {
@@ -13,72 +11,104 @@ void printMatrixSpiral( int **matrix, unsigned int width, unsigned int height )
     }
 
   // Our indices into the matrix
-  unsigned int row = 0;
-  unsigned int col = 0;
+  int row = 0;
+  int col = 0;
 
   // The ever-decreasing boundary of the matrix
   // that we have NOT printed yet
-  unsigned int rtop = 0;
-  unsigned int rbot = height - 1;
-  unsigned int cleft = 0;
-  unsigned int cright = width - 1;
+  int rtop = 0;
+  int rbot = height - 1;
+  int cleft = 0;
+  int cright = width - 1;
 
-  do
+  while ( 1 )
     {
       // Print right
       row = rtop;
       col = cleft;
       while ( col <= cright )
         {
-          cout << matrix[row][col];
+          cout << matrix[row][col] << " ";
           ++col;
         }
       ++rtop;
+
+      if ( rtop > rbot || cleft > cright )
+        {
+          break;
+        }
 
       // Print down
       row = rtop;
       col = cright;
       while ( row <= rbot )
         {
-          cout << matrix[row][col];
+          cout << matrix[row][col] << " ";
           ++row;
         }
       --cright;
+
+      if ( rtop > rbot || cleft > cright )
+        {
+          break;
+        }
 
       // Print left
       row = rbot;
       col = cright;
       while ( col >= cleft )
         {
-          cout << matrix[row][col];
+          cout << matrix[row][col] << " ";
           --col;
         }
       --rbot;
+
+      if ( rtop > rbot || cleft > cright )
+        {
+          break;
+        }
 
       // Print up
       row = rbot;
       col = cleft;
       while ( row >= rtop )
         {
-          cout << matrix[row][col];
+          cout << matrix[row][col] << " ";
           --row;
         }
       ++cleft;
 
-      // TODO: It *looks* like the problem might not want a trailing space.
-      // Should verify this with the PM! And, then fix.
-      cout << " ";
-    } while ( rbot != rtop || cleft != cright );
-
-  // Hmmm...in odd by odd matrices the algorithm above
-  // fails to print the last cell. Seems hacky to do this.
-  // Would test more, but am out of time.
-  if ( width % 2 == 1 && height % 2 == 1 )
-    {
-      cout << matrix[height/2][width/2];
+      if ( rtop > rbot || cleft > cright )
+        {
+          break;
+        }
     }
 
   // TODO: It *looks* like the problem wants a newline at the end.
   // Should verify this with the PM!
   cout << endl;
+}
+
+int main( int argc, char *argv[] )
+{
+  int matrix_3_3[3][3] = 
+    {
+      { 1, 2, 3 },
+      { 8, 9, 4 },
+      { 7, 6, 5 }
+    };
+
+  printMatrixSpiral( matrix_3_3, 1, 1 );
+  printMatrixSpiral( matrix_3_3, 1, 2 );
+  printMatrixSpiral( matrix_3_3, 1, 3 );
+  cout << endl;
+  printMatrixSpiral( matrix_3_3, 2, 1 );
+  printMatrixSpiral( matrix_3_3, 2, 2 );
+  printMatrixSpiral( matrix_3_3, 2, 3 );
+  cout << endl;
+  printMatrixSpiral( matrix_3_3, 3, 1 );
+  printMatrixSpiral( matrix_3_3, 3, 2 );
+  printMatrixSpiral( matrix_3_3, 3, 3 );
+
+  return 0;
 }
