@@ -7,9 +7,10 @@ CC       = g++ -Wall -Werror -Weffc++ -O3 -D_GLIBCXX_USE_NANOSLEEP
 CC_DEBUG = g++ -Wall -Werror -Weffc++ -D_GLIBCXX_DEBUG -g -fprofile-arcs -ftest-coverage -pg
 C11      = -std=c++11
 THREADS  = -pthread
-CPPCHECK = ../cppcheck-1.58/cppcheck
+CPPCHECK = ../cppcheck-1.59/cppcheck
 
-EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl hash STL interview01
+EXECUTABLES = args concurrency prime sieve staticConstructor function tictactoe boygirl hash STL interview01 \
+	sorts
 
 .PHONY: all
 all: $(EXECUTABLES)
@@ -91,6 +92,13 @@ STL: STL.cc
 	gcov $@ > /dev/null
 
 interview01: interview01.cc
+	$(CPPCHECK) $^
+	$(CC_DEBUG) $@.cc -o $@
+	./$@
+	gprof $@ gmon.out > $@.gprof
+	gcov $@ > /dev/null
+
+sorts: sorts.cc
 	$(CPPCHECK) $^
 	$(CC_DEBUG) $@.cc -o $@
 	./$@

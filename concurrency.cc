@@ -9,6 +9,7 @@
 #include <iostream>
 #include <queue>
 #include <random>
+#include <chrono>
 
 using std::cout;
 using std::endl;
@@ -67,7 +68,7 @@ void loggerfunc()
 
       while(!g_notified)   // used to avoid spurious wakeups
         {
-          g_queuecheck.wait(locker);
+          g_queuecheck.wait_for(locker, std::chrono::milliseconds(500));
         }
 
       // if there are error codes in the queue process them
