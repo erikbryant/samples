@@ -15,7 +15,7 @@ fib :: Integer -> [ Integer ]
 fib 0 = []
 fib 1 = [ 1 ]
 fib 2 = [ 1, 1 ]
-fib n = 
+fib n =
   let
     a = fib ( n - 1 )
     b = last a
@@ -60,8 +60,3 @@ primes = sieve [2..] where
             remove what (a:as)  | a < what = a:(remove what as)
                                 | a == what = (remove (what+p) as)
                                 | a > what = a:(remove (what+p) as)
-
-
-
-
-
