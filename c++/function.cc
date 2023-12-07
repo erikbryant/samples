@@ -10,18 +10,18 @@ using std::cout;
 using std::endl;
 using std::function;
 
-void aFunction( const char *text )
+void aFunction(const char *text)
 {
   cout << "This is aFunction(), called with argument: /" << text << "/" << endl;
 }
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  function<void ( const char * )> myFunc;
+  function<void(const char *)> myFunc;
 
   myFunc = aFunction;
 
-  myFunc( "testing..." );
+  myFunc("testing...");
 
   //
   // http://www.cprogramming.com/c++11/c++11-lambda-closures.html
@@ -36,15 +36,17 @@ int main( int argc, char *argv[] )
   // [this]    The this pointer of the enclosing class
   //
 
-  function<void ( int )> func;
+  function<void(int)> func;
   int i = 4;
-  func = [=](int curr) {
+  func = [=](int curr)
+  {
     cout << "[=] i currently = " << curr << ". My idea of i is = " << i << endl;
   };
   func(i);
   i = 10;
   func(i);
-  func = [&](int curr) {
+  func = [&](int curr)
+  {
     cout << "[&] i currently = " << curr << ". My idea of i is = " << i << endl;
   };
   func(i);

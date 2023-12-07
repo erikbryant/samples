@@ -22,7 +22,7 @@ bool g_done;
 bool g_notified;
 bool g_loggerReady;
 
-void workerfunc(int id, std::mt19937& generator)
+void workerfunc(int id, std::mt19937 &generator)
 {
   // print a starting message
   {
@@ -34,7 +34,7 @@ void workerfunc(int id, std::mt19937& generator)
   std::this_thread::sleep_for(std::chrono::seconds(1 + generator() % 5));
 
   // simulate error
-  int errorcode = id*100+1;
+  int errorcode = id * 100 + 1;
   {
     std::unique_lock<std::mutex> locker(g_lockprint);
     cout << "[worker " << id << "]\tan error occurred: " << errorcode << endl;
@@ -62,25 +62,25 @@ void loggerfunc()
   g_loggerReady = true;
 
   // loop until end is signaled
-  while(!g_done)
+  while (!g_done)
+  {
+    std::unique_lock<std::mutex> locker(g_lockqueue);
+
+    while (!g_notified) // used to avoid spurious wakeups
     {
-      std::unique_lock<std::mutex> locker(g_lockqueue);
-
-      while(!g_notified)   // used to avoid spurious wakeups
-        {
-          g_queuecheck.wait_for(locker, std::chrono::milliseconds(500));
-        }
-
-      // if there are error codes in the queue process them
-      while(!g_codes.empty())
-        {
-          std::unique_lock<std::mutex> locker(g_lockprint);
-          cout << "[logger]\tprocessing error: " << g_codes.front() << endl;
-          g_codes.pop();
-        }
-
-      g_notified = false;
+      g_queuecheck.wait_for(locker, std::chrono::milliseconds(500));
     }
+
+    // if there are error codes in the queue process them
+    while (!g_codes.empty())
+    {
+      std::unique_lock<std::mutex> locker(g_lockprint);
+      cout << "[logger]\tprocessing error: " << g_codes.front() << endl;
+      g_codes.pop();
+    }
+
+    g_notified = false;
+  }
 }
 
 int main()
@@ -91,25 +91,25 @@ int main()
   // start the logger
   g_loggerReady = false;
   std::thread loggerthread(loggerfunc);
-  while ( !g_loggerReady )
-    {
-      cout << "Sleeping to wait for logger..." << endl;
-      std::this_thread::sleep_for(std::chrono::seconds(1));
-      cout << "...done sleeping" << endl;
-    }
+  while (!g_loggerReady)
+  {
+    cout << "Sleeping to wait for logger..." << endl;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    cout << "...done sleeping" << endl;
+  }
 
   // start the worker threads
   std::vector<std::thread> threads;
-  for(int i = 0; i < 5; ++i)
-    {
-      threads.push_back(std::thread(workerfunc, i+1, std::ref(generator)));
-    }
+  for (int i = 0; i < 5; ++i)
+  {
+    threads.push_back(std::thread(workerfunc, i + 1, std::ref(generator)));
+  }
 
   // wait for the workers to finish
-  for(auto& t : threads)
-    {
-      t.join();
-    }
+  for (auto &t : threads)
+  {
+    t.join();
+  }
 
   // notify the logger to finish and wait for it
   g_done = true;

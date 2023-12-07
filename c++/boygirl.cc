@@ -17,32 +17,32 @@
 using std::cout;
 using std::endl;
 
-unsigned int haveChildren( void )
+unsigned int haveChildren(void)
 {
   unsigned int girls = 0;
 
   // Boy == 0, girl == 1
-  while ( rand() % 2 == 1 )
-    {
-      girls++;
-    }
+  while (rand() % 2 == 1)
+  {
+    girls++;
+  }
 
   return girls;
 }
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
-  srand( time(NULL) );
+  srand(time(NULL));
 
   unsigned int i = 0;
   unsigned int boys = 0;
   unsigned int girls = 0;
 
-  for ( i = 0; i < 10000000; ++i )
-    {
-      girls += haveChildren();
-      boys += 1;
-    }
+  for (i = 0; i < 10000000; ++i)
+  {
+    girls += haveChildren();
+    boys += 1;
+  }
 
   cout << "Boys: " << boys << " Girls: " << girls << endl;
 }

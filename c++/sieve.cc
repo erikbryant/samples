@@ -12,7 +12,6 @@
 //   the sieve values as being primes.
 //
 
-
 #include <iostream>
 #include <fstream>
 #include <ctime>
@@ -23,124 +22,125 @@
 using std::cout;
 using std::endl;
 
-inline unsigned int offsetByte( unsigned int location )
+inline unsigned int offsetByte(unsigned int location)
 {
-  return ( location >> 3 );
+  return (location >> 3);
 }
 
-inline unsigned char offsetBit( unsigned int location )
+inline unsigned char offsetBit(unsigned int location)
 {
-  return ( location & 0x07 );
+  return (location & 0x07);
 }
 
-inline unsigned char getbit( unsigned int location, char *buffer )
+inline unsigned char getbit(unsigned int location, char *buffer)
 {
-  return ( (buffer[offsetByte( location )] & ( 0x01 << offsetBit( location ) )) >> offsetBit( location ) );
+  return ((buffer[offsetByte(location)] & (0x01 << offsetBit(location))) >> offsetBit(location));
 }
 
-inline void setbit( unsigned int location, char *buffer )
+inline void setbit(unsigned int location, char *buffer)
 {
-  buffer[offsetByte( location )] |= 0x01 << offsetBit( location );
+  buffer[offsetByte(location)] |= 0x01 << offsetBit(location);
 }
 
-inline void clearbit( unsigned int location, char *buffer )
+inline void clearbit(unsigned int location, char *buffer)
 {
-  buffer[offsetByte( location )] &= ~( 0x01 << offsetBit( location ) );
+  buffer[offsetByte(location)] &= ~(0x01 << offsetBit(location));
 }
 
-unsigned int printCandidates( unsigned int max, char *buffer )
+unsigned int printCandidates(unsigned int max, char *buffer)
 {
   unsigned int found = 0;
 
   cout << "Candidates:" << endl;
 
-  for ( unsigned int i = 0; i <= max; i++ )
+  for (unsigned int i = 0; i <= max; i++)
+  {
+    if (getbit(i, buffer))
     {
-      if ( getbit( i, buffer ) )
-        {
-          found++;
-          cout << "  " << i << endl;
-        }
+      found++;
+      cout << "  " << i << endl;
     }
+  }
 
   return found;
 }
 
-unsigned int countCandidates( unsigned int max, char *buffer )
+unsigned int countCandidates(unsigned int max, char *buffer)
 {
   unsigned int found = 0;
 
   // 2 is prime. Be sure to include it.
   found = 1;
 
-  for ( unsigned int i = 3; i <= max; i += 2 )
-    {
-      found += getbit( i, buffer );
-    }
+  for (unsigned int i = 3; i <= max; i += 2)
+  {
+    found += getbit(i, buffer);
+  }
 
   return found;
 }
 
-inline void sieve( unsigned int multiple, unsigned int max, char *buffer )
+inline void sieve(unsigned int multiple, unsigned int max, char *buffer)
 {
-  for ( unsigned int i = multiple * 2; i <= max; i += multiple )
-    {
-      clearbit( i, buffer );
-    }
+  for (unsigned int i = multiple * 2; i <= max; i += multiple)
+  {
+    clearbit(i, buffer);
+  }
 }
 
-unsigned int initbits( char *buffer, unsigned int buffLen )
+unsigned int initbits(char *buffer, unsigned int buffLen)
 {
   unsigned int pattLen = 8 * (3 * 5);
   unsigned int max = (pattLen * 8) - 1;
   char *pattern = new char[pattLen];
 
-  if ( buffLen < pattLen )
-    {
-      cout << "ERROR: buffLen is less than pattLen." << endl;
-      exit( 1 );
-    }
+  if (buffLen < pattLen)
+  {
+    cout << "ERROR: buffLen is less than pattLen." << endl;
+    exit(1);
+  }
 
   // Use this opportunity to clear all the even bits.
-  memset( pattern, 0xaa, sizeof( char ) * pattLen );
+  memset(pattern, 0xaa, sizeof(char) * pattLen);
 
-  sieve( 3, max, pattern );
-  clearbit( 3, pattern );
-  sieve( 5, max, pattern );
-  clearbit( 5, pattern );
+  sieve(3, max, pattern);
+  clearbit(3, pattern);
+  sieve(5, max, pattern);
+  clearbit(5, pattern);
 
   unsigned int i = 0;
-  for ( i = 0; i <= (buffLen-pattLen); i += pattLen )
-    {
-      memcpy( &(buffer[i]), pattern, pattLen );
-    }
+  for (i = 0; i <= (buffLen - pattLen); i += pattLen)
+  {
+    memcpy(&(buffer[i]), pattern, pattLen);
+  }
 
-  if ( buffLen % pattLen ) {
-    memcpy( &(buffer[i]), pattern, buffLen % pattLen );
+  if (buffLen % pattLen)
+  {
+    memcpy(&(buffer[i]), pattern, buffLen % pattLen);
   }
 
   delete[] pattern;
 
   // By convention, 0 and 1 are not prime. 2 is prime.
-  clearbit( 0, buffer );
-  clearbit( 1, buffer );
-  setbit( 2, buffer );
-  setbit( 3, buffer );
-  setbit( 5, buffer );
+  clearbit(0, buffer);
+  clearbit(1, buffer);
+  setbit(2, buffer);
+  setbit(3, buffer);
+  setbit(5, buffer);
 
   // Tell the caller how far we got (i.e., where they should start from)
   return 7;
 }
 
-inline void clearallbits( char *buffer, unsigned int buffLen )
+inline void clearallbits(char *buffer, unsigned int buffLen)
 {
-  memset( buffer, 0x00, sizeof( char ) * buffLen );
+  memset(buffer, 0x00, sizeof(char) * buffLen);
 }
 
-int main( int argc, char* argv[] )
+int main(int argc, char *argv[])
 {
 #define max (1000)
-#define max_len ( (max+8)>>3 )
+#define max_len ((max + 8) >> 3)
 
   char *candidates = new char[max_len];
 
@@ -150,17 +150,18 @@ int main( int argc, char* argv[] )
 
   start = clock();
 
-  unsigned int floor   = initbits( candidates, max_len );
-  unsigned int ceiling = static_cast<unsigned int>(sqrt( static_cast<double>(max) ));
+  unsigned int floor = initbits(candidates, max_len);
+  unsigned int ceiling = static_cast<unsigned int>(sqrt(static_cast<double>(max)));
 
-  for ( unsigned int i = floor; i <= ceiling; i++ )
+  for (unsigned int i = floor; i <= ceiling; i++)
+  {
+    if (getbit(i, candidates))
     {
-      if ( getbit( i, candidates ) ) {
-        sieve( i, max, candidates );
-      }
+      sieve(i, max, candidates);
     }
+  }
 
-  found = countCandidates( max, candidates );
+  found = countCandidates(max, candidates);
 
   finish = clock();
 

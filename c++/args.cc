@@ -8,9 +8,11 @@
 using std::cout;
 using std::endl;
 
-int main( int argc, char **argv ) {
+int main(int argc, char **argv)
+{
   cout << "Hello, world!" << endl;
-  for ( int i = 0; i < argc; i++ ) {
+  for (int i = 0; i < argc; i++)
+  {
     cout << "argv[" << i << "]: " << argv[i] << endl;
   }
 }

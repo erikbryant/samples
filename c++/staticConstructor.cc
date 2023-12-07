@@ -36,13 +36,12 @@ public:
 
 private:
   int bar;
-  Foo() :
-    bar(99)
+  Foo() : bar(99)
   {
   }
 };
 
-int main( int argc, char *argv[] )
+int main(int argc, char *argv[])
 {
   Foo *myFoo = Foo::makeFoo();
 

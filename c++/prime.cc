@@ -11,26 +11,26 @@
 using std::cout;
 using std::endl;
 using std::ifstream;
-using std::ofstream;
 using std::ios;
 using std::min;
+using std::ofstream;
 
 #undef CACHE_FILE
 #undef TEXT_OUTPUT
 #define CACHE_FILE
 #define TEXT_OUTPUT
 
-int main( int argc, char* argv[] )
+int main(int argc, char *argv[])
 {
 #ifdef TEXT_OUTPUT
-  const char *primesFile       = "primes.cache";
+  const char *primesFile = "primes.cache";
 #endif
   const char *primesFileBinary = "primes.cache.binary";
   unsigned int max = 100 * 1000 * 1000;
   unsigned int first = 0;
   unsigned int found = 0;
   // A storage ratio of 0.867 gets us to max = 10,000,000,000
-  unsigned int space   = static_cast<unsigned int>(pow(static_cast<double>(max), 0.867));
+  unsigned int space = static_cast<unsigned int>(pow(static_cast<double>(max), 0.867));
   unsigned int *primes = new unsigned int[space];
   clock_t start;
   clock_t finish;
@@ -38,58 +38,69 @@ int main( int argc, char* argv[] )
   cout << "Prime number generator." << endl;
 
 #ifdef CACHE_FILE
-  ifstream cacheInB( primesFileBinary, ios::in | ios::binary );
+  ifstream cacheInB(primesFileBinary, ios::in | ios::binary);
   unsigned int max_file = 0;
-  if ( cacheInB.is_open() )
+  if (cacheInB.is_open())
+  {
+    unsigned int found_file = 0;
+
+    start = clock();
+    cout << "Binary cache file exists. Initializing from cache." << endl;
+    cacheInB.read(reinterpret_cast<char *>(&max_file), sizeof(max_file));
+    cacheInB.read(reinterpret_cast<char *>(&found_file), sizeof(found_file));
+    cout << "Cache file contains: max: " << max_file << " found: " << found_file << endl;
+
+    // Skip even numbers. The algorithm depends on starting number being odd.
+    if (max_file & 0x01)
     {
-      unsigned int found_file = 0;
-
-      start = clock();
-      cout << "Binary cache file exists. Initializing from cache." << endl;
-      cacheInB.read( reinterpret_cast<char*>(&max_file), sizeof( max_file ) );
-      cacheInB.read( reinterpret_cast<char*>(&found_file), sizeof( found_file ) );
-      cout << "Cache file contains: max: " << max_file << " found: " << found_file << endl;
-
-      // Skip even numbers. The algorithm depends on starting number being odd.
-      if ( max_file & 0x01 ) {
-        first = max_file + 2;
-      } else {
-        first = max_file + 1;
-      }
-
-      unsigned int preload = min( space, found_file );
-      cacheInB.read( reinterpret_cast<char*>(primes), sizeof( primes[0] ) * preload );
-      if ( max < max_file ) {
-        for( unsigned int i = 0; i < preload; i++ ) {
-          if ( primes[i] < max ) {
-            found++;
-          }
-        }
-      } else {
-        found = preload;
-      }
-      cacheInB.close();
-      finish = clock();
-      cout << "Cache(msec):  " << finish - start << endl;
+      first = max_file + 2;
     }
+    else
+    {
+      first = max_file + 1;
+    }
+
+    unsigned int preload = min(space, found_file);
+    cacheInB.read(reinterpret_cast<char *>(primes), sizeof(primes[0]) * preload);
+    if (max < max_file)
+    {
+      for (unsigned int i = 0; i < preload; i++)
+      {
+        if (primes[i] < max)
+        {
+          found++;
+        }
+      }
+    }
+    else
+    {
+      found = preload;
+    }
+    cacheInB.close();
+    finish = clock();
+    cout << "Cache(msec):  " << finish - start << endl;
+  }
   else
 #endif
-    {
-      cout << "Unable to open cache file: " << primesFileBinary
-           << ". Calculating from scratch." << endl;
-      // 1 is not prime, but 2 is. Record it.
-      primes[found] = 2;
-      found++;
-      first = 3;
-    }
+  {
+    cout << "Unable to open cache file: " << primesFileBinary
+         << ". Calculating from scratch." << endl;
+    // 1 is not prime, but 2 is. Record it.
+    primes[found] = 2;
+    found++;
+    first = 3;
+  }
 
   start = clock();
-  for ( unsigned int candidate = first; candidate <= max; candidate += 2 ) {
+  for (unsigned int candidate = first; candidate <= max; candidate += 2)
+  {
     primes[found] = candidate;
     found++;
-    int ceiling = static_cast<int>(sqrt( static_cast<double>(candidate) )) + 1;
-    for ( unsigned int i = 0; (i < found) && (static_cast<int>(primes[i]) < ceiling); i++ ) {
-      if ( candidate % primes[i] == 0 ) {
+    int ceiling = static_cast<int>(sqrt(static_cast<double>(candidate))) + 1;
+    for (unsigned int i = 0; (i < found) && (static_cast<int>(primes[i]) < ceiling); i++)
+    {
+      if (candidate % primes[i] == 0)
+      {
         found--;
         break;
       }
@@ -131,32 +142,38 @@ int main( int argc, char* argv[] )
   // to the cache file.
   //
 #ifdef CACHE_FILE
-  if ( max > max_file ) {
+  if (max > max_file)
+  {
     cout << "We have new calculated data. Writing back to cache file." << endl;
 
 #ifdef TEXT_OUTPUT
-    ofstream cacheOut( primesFile );
-    if ( cacheOut.is_open() )
+    ofstream cacheOut(primesFile);
+    if (cacheOut.is_open())
+    {
+      cacheOut << max << endl;
+      cacheOut << found << endl;
+      for (unsigned int i = 0; i < found; i++)
       {
-        cacheOut << max << endl;
-        cacheOut << found << endl;
-        for ( unsigned int i = 0; i < found; i++ ) {
-          cacheOut << primes[i] << endl;
-        }
-        cacheOut.close();
-      } else {
+        cacheOut << primes[i] << endl;
+      }
+      cacheOut.close();
+    }
+    else
+    {
       cout << "Unable to create cache file: " << primesFile << endl;
     }
 #endif
 
-    ofstream cacheOutB( primesFileBinary, ios::binary );
-    if ( cacheOutB.is_open() )
-      {
-        cacheOutB.write( reinterpret_cast<char*>(&max), sizeof( max ) );
-        cacheOutB.write( reinterpret_cast<char*>(&found), sizeof( found ) );
-        cacheOutB.write( reinterpret_cast<char*>(primes), sizeof( primes[0] ) * found );
-        cacheOutB.close();
-      } else {
+    ofstream cacheOutB(primesFileBinary, ios::binary);
+    if (cacheOutB.is_open())
+    {
+      cacheOutB.write(reinterpret_cast<char *>(&max), sizeof(max));
+      cacheOutB.write(reinterpret_cast<char *>(&found), sizeof(found));
+      cacheOutB.write(reinterpret_cast<char *>(primes), sizeof(primes[0]) * found);
+      cacheOutB.close();
+    }
+    else
+    {
       cout << "Unable to create cache file: " << primesFileBinary << endl;
     }
   }
