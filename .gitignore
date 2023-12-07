@@ -26,4 +26,4 @@ perf.data*
 *.gprof
 gmon.out
 *.gcov
-
+*.dSYM
