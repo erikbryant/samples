@@ -49,7 +49,7 @@ def main():
                 },
             },
     }
-    
+
     right_object_similar = {
         "a": 1,
         "b": 2,
@@ -61,7 +61,7 @@ def main():
                 },
             },
     }
-    
+
     right_object = {
         "a": 1,
         "b": 22,
@@ -70,7 +70,7 @@ def main():
             "z": "A",
             },
     }
-    
+
     json_diff(left_object, right_object_similar)
 
 
