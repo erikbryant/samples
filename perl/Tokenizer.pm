@@ -33,6 +33,3 @@ sub print {
 
   print $self->{_text} . "\n";
 }
-
-
-1

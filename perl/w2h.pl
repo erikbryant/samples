@@ -3,8 +3,6 @@
 use strict;
 use locale;
 
-
-
 sub tokenize {
   my ( $text ) = @_;
 
@@ -23,7 +21,7 @@ for ( my $i=0; $i < $text_len; $i++ ) {
   my @tokens = tokenize( $text[$i] );
 
   if ( $tokens[0] =~ /^h(\d)\.$/ ) {
-    print "<h$1>"; 
+    print "<h$1>";
     shift @tokens;
     print join ' ', @tokens;
     print "</h$1>\n";
@@ -35,7 +33,7 @@ for ( my $i=0; $i < $text_len; $i++ ) {
         print "<ul>\n";
       }
     }
-    print "<li>"; 
+    print "<li>";
     shift @tokens;
     print join ' ', @tokens;
     print "</li>\n";
@@ -61,6 +59,3 @@ for ( my $i=0; $i < $text_len; $i++ ) {
     print "</p>\n";
   }
 }
-
-
-

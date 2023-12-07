@@ -11,5 +11,3 @@ my $tokenizer = new Tokenizer( @text );
 
 $tokenizer->setText( @text );
 $tokenizer->print();
-
-
