@@ -27,3 +27,4 @@ perf.data*
 gmon.out
 *.gcov
 *.dSYM
+.idea
