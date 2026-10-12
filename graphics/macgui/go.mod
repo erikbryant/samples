@@ -1,6 +1,6 @@
 module github.com/erikbryant/macgui
 
-go 1.26.5
+go 1.27.2
 
 require fyne.io/fyne/v2 v2.8.1
 
